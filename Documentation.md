@@ -1,4 +1,4 @@
-# Set up
+# Set up Django
 1. Install virtual environment and activate.  [reference](https://linuxhint.com/activate-virtualenv-windows/#:~:text=To%20activate%20virtualenv%20on%20Windows%2C%20first%2C%20install%20the%20pip.,%5CScripts%5Cactivate%E2%80%9D%20command.)
 ``` 
 C:\Users\biqif>pip install virtualenv
@@ -25,3 +25,35 @@ C:\Users\biqif\SOProject>venvironment\Scripts\activate
 - `(venvironment) C:\Users\biqif\SOProject\scrappAR>python manage.py runserver`
 
 5. add new user by `(venvironment) C:\Users\biqif\SOProject\scrappAR>python manage.py createsuperuser`
+
+# Set Up Database
+MYSQL 8.0 Client password is `s0project`.
+1. Create MySQL database.
+
+[reference](https://www.tutorialspoint.com/how-to-store-usernames-and-passwords-safely-in-mysql-database)
+```
+CREATE DATABASE ScrappAR
+USE ScrappAR
+CREATE TABLE Users (
+				   UserID int(10) unsigned NOT NULL AUTO_INCREMENT,
+				   UserEmail varchar(255) DEFAULT NULL, /* email is PK */
+				   UserPassword varchar(255) DEFAULT NULL,
+				   UserFirstName varchar(255) NOT NULL,
+				   UserLastName varchar(255) NOT NULL,
+				   primary key(UserID),
+				   UNIQUE KEY `UserEmail`(`UserEmail`)
+                   );
+```
+2. Update the settings.py. follow [reference](https://www.geeksforgeeks.org/how-to-integrate-mysql-database-with-django/)
+```
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ScrappAR',
+        'USER': 'root',
+        'PASSWORD': 's0project',
+        'HOST':'localhost',
+        'PORT':'3307',
+    }
+}
+```
