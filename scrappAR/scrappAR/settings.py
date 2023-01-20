@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-2vg5h@h)uo5_h-$ju9d-jqe4-h07d6lg28es*lg6-nhq#n$-9g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -80,11 +80,14 @@ WSGI_APPLICATION = 'scrappAR.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ScrappAR',
+        'USER': 'root',
+        'PASSWORD': 's0project',
+        'HOST':'localhost',
+        'PORT':'3307',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
