@@ -10,8 +10,8 @@ class Post(models.Model):
         #null = True
     #)
 	
-	created_on = models.DateTimeField(default=timezone.now)
-	author = models.ForeignKey(User, on_delete=models.CASCADE)
+	#created_on = models.DateTimeField(default=timezone.now)
+	#author = models.ForeignKey(User, on_delete=models.CASCADE)
 	body = models.TextField()
 
 

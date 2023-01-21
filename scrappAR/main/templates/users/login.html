@@ -1,31 +1,42 @@
-<link href="style.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Indie+Flower|Overpass+Mono" rel="stylesheet">
+{% extends 'main/base.html' %}
 
-<div id="wrapper">
-  <div class="main-content">
-    <div class="header">
-      <img src="https://i.imgur.com/zqpwkLQ.png" />
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-10 col-sm-12 text-center">
+                <div class="display-2"><h1 style="padding-top: 150px;">LOGIN!</h1>
+                    <p class="mt-4 lead"><b>Sign in to your account.</b></p>
+
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <input class="justify-content-center" type="text" name="UserName" id="UserName" placeholder="Username" style="font-family: sans-serif; font-size: 30px; height: 60px; width: 400px; border-radius: 10px;">
+                        <br>
+                        <input class="justify-content-center mt-1" type="password" name="Password" id="Password" placeholder="Password" style="font-family: sans-serif; font-size: 30px; height: 60px; width: 400px; border-radius: 10px;">
+                        
+                        <div class="justify-content-center">
+                            <p class="mt-3" style="font-family: sans-serif;font-size: 14px;">I forgot my password. Click here to <a href="#" class="mt-1" style="font-family: sans-serif;font-size: 14px; text-align: left;">Reset.</a></p>
+                        </div>
+
+                        <div class="d-flex justify-content-center mt-3">
+                            <button type="submit" onclick = "Login()" class="btnLogin" style="font-family: 'Roboto',sans-serif;font-size: 18px;font-weight: bold;background-color: #00ffb5;width: 350px;padding: 20px;text-align: center;text-decoration: none;text-transform: uppercase;color: black;border-radius: 10px;cursor: pointer;box-shadow: 0 0 10px rgba(0,0,0,0.1);border-color: transparent;">Login</button>
+                        </div>
+
+                        <!--<div class="d-flex justify-content-center mt-5">
+                            <a href="#" class="btn1" style="font-family: 'Roboto',sans-serif;font-size: 18px;font-weight: bold;background-color: #00ffb5;width: 350px;padding: 20px;text-align: center;text-decoration: none;text-transform: uppercase;color: black;border-radius: 10px;cursor: pointer;box-shadow: 0 0 10px rgba(0,0,0,0.1);">Login</a>
+                        </div>-->
+                    </form>
+
+                    <div class="d-flex justify-content-center mt-4">
+                        <p style="font-family: sans-serif;font-size: 18px;">New to here?</p>&nbsp;
+                        <a href="{% url 'register' %}" class="btn2" style="font-family: 'Roboto', sans-serif;font-size: 18px;">Sign up.</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="l-part">
-      <input type="text" placeholder="Username" class="input-1" />
-      <div class="overlap-text">
-        <input type="password" placeholder="Password" class="input-2" />
-        <a href="#">Forgot?</a>
-      </div>
-      <input type="button" value="Log in" class="btn" />
-    </div>
-  </div>
-  <div class="sub-content">
-    <div class="s-part">
-      Don't have an account?<a href="#">Sign up</a>
-    </div>
-  </div>
-</div>
-
-
-
-
-<!-- By Coding Market -->
-<div class="youtube">
-  <a href="https://www.youtube.com/channel/UCtVM2RthR4aC6o7dzySmExA" target="_blank">by coding market</a>
-</div>
+    <style>
+        ::-webkit-input-placeholder {
+        text-align: center;
+      }
+    </style>
+{% endblock content %}

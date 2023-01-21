@@ -1,22 +1,31 @@
-from django.shortcuts import render
-from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.contrib import messages
 from .forms import LoginForm, UserRegistrationFrom
 from django.http import HttpResponse
 # Create your views here.
 def user_login(request):
-    if request.method == "POST":
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            user = authenticate(request,username=data['username'],password=data['password'])
-            if user is not None:
-                login(request, user)
-                return HttpResponse("user authenticaed and logged in")
-            else:
-                return HttpResponse('Invalid credentials')
-    else: 
-        form = LoginForm()
-    return render(request, 'users/login.html',{'form':form})
+    if request.method == 'POST':
+        username = request.POST.get('UserName')
+        password = request.POST.get('Password')
+
+        try:
+            user = User.objects.get(username = username)
+        except:
+            messages.error(request, 'User does not exist')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('users/login.html')
+        else:
+            messages.error(request, 'Username OR password invalid')
+
+    context = {}
+    return render(request, 'main/index.html', context)
+
 
 def user_registration(request):
     if request.method == 'POST':
