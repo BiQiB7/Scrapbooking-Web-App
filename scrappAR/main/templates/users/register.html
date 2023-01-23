@@ -15,33 +15,36 @@
             <div class="col-md-10 col-sm-12 text-center">
                 <div class="display-2"><h1 style="padding-top: auto;">Sign Up</h1>
                     <p class="mt-1 lead"><b>Create an account. It's easy.</b></p>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        {{ register_form|crispy }}
+                        <input class="justify-content-center" type="text" name="txtFirstName" id="txtFirstName" placeholder="&nbsp&nbsp First name" style="font-family: sans-serif; font-size: 25px; height: 60px; width: 700px; border-radius: 10px;">
+                        <br>
+                        <input class="justify-content-center" type="text" name="txtLastName" id="txtLastName" placeholder="&nbsp&nbsp Last name" style="font-family: sans-serif; font-size: 25px; height: 60px; width: 700px; border-radius: 10px;">
+                        <br>
+                        <input class="justify-content-center" type="text" name="txtEmail" id="txtEmail" placeholder="&nbsp&nbsp Email address" style="font-family: sans-serif; font-size: 25px; height: 60px; width: 700px; border-radius: 10px;">
+                        <br>
+                        <input class="justify-content-center" type="password" name="txtPassword" id="txtPassword" placeholder="&nbsp&nbsp New Password" style="font-family: sans-serif; font-size: 25px; height: 60px; width: 700px; border-radius: 10px;">
 
-                    <input class="justify-content-center" type="text" name="txtFirstName" id="txtFirstName" placeholder="&nbsp&nbsp First name" style="font-family: sans-serif; font-size: 25px; height: 60px; width: 700px; border-radius: 10px;">
-                    <br>
-                    <input class="justify-content-center" type="text" name="txtLastName" id="txtLastName" placeholder="&nbsp&nbsp Last name" style="font-family: sans-serif; font-size: 25px; height: 60px; width: 700px; border-radius: 10px;">
-                    <br>
-                    <input class="justify-content-center" type="text" name="txtEmail" id="txtEmail" placeholder="&nbsp&nbsp Mobile number or email address" style="font-family: sans-serif; font-size: 25px; height: 60px; width: 700px; border-radius: 10px;">
-                    <br>
-                    <input class="justify-content-center" type="password" name="txtPassword" id="txtPassword" placeholder="&nbsp&nbsp New Password" style="font-family: sans-serif; font-size: 25px; height: 60px; width: 700px; border-radius: 10px;">
+                        <p style="font-family: sans-serif; font-size: 18px; padding-top: 20px; padding-left: 200px ;text-align: left;">Date of Birth</p>
 
-                    <p style="font-family: sans-serif; font-size: 18px; padding-top: 20px; text-align: left;">Date of Birth</p>
+                        <input class="justify-content-center" type="datetime-local" id="birthdaytime" name="birthdaytime" placeholder="&nbsp&nbsp birthdaytime" style="text-align: left; font-size: 20px; height: 20px; width: 100px;">
+
+                        <p style="font-family: sans-serif; font-size: 18px; padding-left: 200px; padding-top: 20px; text-align: left;">Gender</p>
                     
-                    <div class="justify-content-center">
-                        
-                    </div>
-
-                    <p style="font-family: sans-serif; font-size: 18px; padding-left: 200px; padding-top: 20px; text-align: left;">Gender</p>
-
                     <div class="justify-content-center">
 
                     </div>
                     
                     <div class="d-flex justify-content-center mt-4">
-                        <p style="font-family: sans-serif;font-size: 18px; text-align: left;">By clicking Sign Up, you agree to our Terms of Services and Privacy Policy.</p>
+                        <p style="font-family: sans-serif;font-size: 
+                        18px; text-align: left;">By clicking Sign Up, you agree to our Terms of Services and Privacy Policy.</p>
                     </div>
                     <div class="d-flex justify-content-center mt-2">
-                        <a href="#" class="btn1" style="font-family: 'Roboto',sans-serif;font-size: 18px;font-weight: bold;background-color: #00ffb5;width: 350px;padding: 20px;text-align: center;text-decoration: none;text-transform: uppercase;color: black;border-radius: 10px;cursor: pointer;box-shadow: 0 0 10px rgba(0,0,0,0.1);">Sign Up</a>
+                        <!-- <a href="" class="btn1" style="font-family: 'Roboto',sans-serif;font-size: 18px;font-weight: bold;background-color: #00ffb5;width: 350px;padding: 20px;text-align: center;text-decoration: none;text-transform: uppercase;color: black;border-radius: 10px;cursor: pointer;box-shadow: 0 0 10px rgba(0,0,0,0.1);">Sign Up</a> -->
+                        <button type="submit" class="signupbtn">Sign Up</button>
                     </div>
+                    </form>
                     <div class="d-flex justify-content-center mt-4">
                         <p style="font-family: sans-serif;font-size: 18px; text-align: left;">Have an account?</p>&nbsp;
                         <a href="{% url 'login' %}" style="font-family: 'Roboto', sans-serif;font-size: 18px;">Login.</a>

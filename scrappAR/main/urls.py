@@ -8,6 +8,7 @@ urlpatterns = [
     # path('', mainview.home, name='home'),
     path('', usersview.user_login, name='login'),
     path('register/', usersview.user_registration, name='register'),
+    path('login/', usersview.user_login, name = 'login'),
     path('scrapbook/listview', scrapbookviews.PostListView.as_view(), name = 'listview'),
     #path('scrapbook/detailview',scrapbookviews.PostDetailView, name = 'detailview'),
     path('scrapbook/edit',scrapbookviews.PostEditView.as_view(), name = 'edit' ),

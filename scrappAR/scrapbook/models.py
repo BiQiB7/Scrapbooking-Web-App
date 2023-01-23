@@ -10,16 +10,17 @@ class Post(models.Model):
         #null = True
     #)
 	
-	#created_on = models.DateTimeField(default=timezone.now)
-	#author = models.ForeignKey(User, on_delete=models.CASCADE)
+	created_on = models.DateTimeField(default=timezone.now)
+	author = models.ForeignKey(User, on_delete=models.CASCADE, default= 1)
 	body = models.TextField()
 
 
 class Comment(models.Model):
 	comment = models.TextField()
 	created_on = models.DateTimeField(default=timezone.now)
-	author = models.ForeignKey(User, on_delete=models.CASCADE)
+	author = models.ForeignKey(User, on_delete=models.CASCADE, default= 1)
 	post = models.ForeignKey('Post', on_delete=models.CASCADE)
+
 
 class Likes(models.Model):
     like = models.IntegerField()

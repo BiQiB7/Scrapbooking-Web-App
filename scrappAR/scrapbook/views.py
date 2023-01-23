@@ -47,7 +47,8 @@ class PostDetailView(View):
 			'comments' : comments,
 		}
 
-		return render(request, 'scrapbook/post_detail.html', context)
+		return render(request, 'scrapbook/post_details.html', context)
+
 	def post(self, request, pk, *args, **kwargs):
 		post = Post.objects.get(pk=pk)
 		form = CommentForm(request.POST)
@@ -66,7 +67,7 @@ class PostDetailView(View):
 			'comments': comments,
 		}
 
-		return render(request, 'scrapbook/post_detail.html', context)
+		return render(request, 'scrapbook/post_details.html', context)
 
 	def like(request, post_id):
 		user = request.user
