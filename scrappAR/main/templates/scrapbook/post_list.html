@@ -2,7 +2,8 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<form class="container">
+
+<div class="container">
 	<div class="row justify-content-center mt-3">
 		<div class="col-md-5 col-sm-12 border-bottom">
 			<h5>Add a Post</h5>
@@ -11,22 +12,34 @@
 
 	<div class="row justify-content-center mt-3 mb-5">
 		<div class="col-md-5 col-sm-12 border-bottom">
-			<form methods="POST">
+			<form action = "{%url 'scrapbook:post-list' %}" method="POST" name = "scrapbook" enctype="multipart/form-data">
 				{% csrf_token %}
 				{{ form | crispy }}
 				<div class="d-grid gap-2">
-					<button class="btn btn-success mt-3">Submit</button>
+					<input type="submit" value="Submit">
 				</div>
-			</form>
+			</form>	
 		</div>
 	</div>
 
 	{% for post in post_list %}
 	<div class="row justify-content-center mt-3">
 		<div class="col-md-5 col-sm-12 border-bottom position-relative">
-			<p><strong>{{post.author}}</strong>{{post.created_on}}</p>
-			<p>({ post.body })</p>
-			<a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+			<p><strong>{{ post.author }}</strong>{{ post.created_on }}</p>
+			{% if post.image.count > 0 %}
+  			<div class="row">
+  			{% for img in post.image.all %}
+
+      		<img src="{{ img.image.url }}" class="post-image" />
+			
+			</div>
+			{% endfor %}
+			
+			{% endif %}
+	
+			<p>{{ post.body }}</p>
+			</div>
+		</div>
 		</div>
 	</div>
 	{% endfor %}

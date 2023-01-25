@@ -1,17 +1,23 @@
 from django import forms
-from .models import Post
+from .models import Posts
 
-class PostForm(forms.Form):
+class PostForm(forms.ModelForm):
     body = forms.CharField(
         label='',
         widget = forms.Textarea(attrs={
             'rows': '3',
             'placeholder' : 'description ...'
-        }))
+            }))
+    image = forms.ImageField(
+    required=False,
+    widget=forms.ClearableFileInput(attrs={
+    'multiple': True
+    })
+)
     class Meta:
-        model = Post
+        model = Posts
         fields = ['body']
-    #photo = forms.ImageField()
+    
     #body = forms.CharField(max_length=2200)
     # drop down select from db
 

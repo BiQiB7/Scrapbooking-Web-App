@@ -1,43 +1,56 @@
+from .models import Image
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.views import View
-from .models import Post, Comment, Likes
+from .models import Posts, Comment, Likes
 from .forms import PostForm, CommentForm
 from django.views.generic.edit import UpdateView, DeleteView
+from django.views.decorators.csrf import csrf_exempt
 
-class PostListView(LoginRequiredMixin, View):
+
+class PostListView(View):
 	def get(self, request, *args, **kwargs):
-		posts = Post.objects.all().order_by('-created_on')
-		form = PostForm()
-
-		context = {
-			'post_list': posts,
-		} 
+		if request.method =="GET":
+			post = Posts.objects.all().order_by('-created_on')
+			form = PostForm()
+			context = {
+				'post_list': post,
+				'form': form,
+			} 
 
 		return render(request, 'scrapbook/post_list.html', context)
 
 	def post(self, request, *args, **kwargs):
-		posts = Post.objects.all().order_by('-created_on')
-		form = PostForm(request.POST)
+		if request.method == "POST":
+			post = Posts.objects.all().order_by('-created_on')
+			form = PostForm(request.POST, request.FILES)
+			files = request.FILES.getlist('image')
 
-		if form.is_valid():
-			new_post = form.save(commit=False)
-			new_post.author = request.user
+			if form.is_valid():
+				new_post = form.save(commit=False)
+				new_post.author = request.user
+				new_post.save()
+
+			for f in files:
+				img = Image(image=f)
+				img.save()
+				new_post.image.add(img)
 			new_post.save()
+				
 
 			context = {
-				'post_list': posts,
+				'post_list': post,
 				'form': form,
-				}
+			}
 
-			return render(request, 'scrapbook/post_list.html', context)
+		return render(request, 'scrapbook/post_list.html', context)
 
 class PostDetailView(View):
 	def gets(self, request, pk, *args, **kwargs):
-		post = Post.objects.get(pk=pk)
+		post = Posts.objects.get(pk=pk)
 		form = CommentForm()
 		comments = Comment.objects.filter(post=post).order_by('-created_on')
 
@@ -86,7 +99,7 @@ class PostDetailView(View):
 		return HttpResponseRedirect(reverse('post-detail', args=[post_id]))
 
 class PostEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-	model = Post
+	model = Posts
 	fields = ['body']
 	template_name = 'scrapbook/post_edit.html'
 
@@ -99,7 +112,7 @@ class PostEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 		return self.request.user == post.author
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-	model = Post
+	model = Posts
 	template_name = 'scrapbook/post_delete.html'
 	success_url = reverse_lazy('post-list')
 
