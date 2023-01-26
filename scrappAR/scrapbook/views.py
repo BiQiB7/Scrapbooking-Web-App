@@ -1,6 +1,6 @@
 from .models import Image
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
@@ -9,6 +9,7 @@ from .models import Posts, Comment, Likes, Scrapbook
 from .forms import PostForm, CommentForm
 from django.views.generic.edit import UpdateView, DeleteView
 from django.views.decorators.csrf import csrf_exempt
+from .models import select_scrapbook
 
 
 class PostListView(View):
@@ -47,11 +48,9 @@ class PostListView(View):
 			}
 
 		return render(request, 'scrapbook/post_list.html', context)
-
-	def select_scrapbook(request):
-		template_name = 'scrapbook/post_list.html'
-		scrapbookcontext= Scrapbook.objects.all()
-		return render(request, template_name, {'scrapbook': scrapbookcontext})
+	def show_scrapbooks(request):
+		results = select_scrapbook.objects.all()
+		return render(request,"scrapbook/post_list.html",{"select_scrapbook": results})
 
 class PostDetailView(View):
 	def gets(self, request, pk, *args, **kwargs):

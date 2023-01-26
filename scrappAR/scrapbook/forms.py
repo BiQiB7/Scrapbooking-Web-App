@@ -1,5 +1,5 @@
 from django import forms
-from .models import Posts
+from .models import Posts, Scrapbook
 
 class PostForm(forms.ModelForm):
     body = forms.CharField(
@@ -14,7 +14,9 @@ class PostForm(forms.ModelForm):
     'multiple': True
     })  
 )
-    scrapbook = forms.CharField()
+    # scrapbook = forms.ModelChoiceField(
+    # label = "Item choices", queryset = Scrapbook.objects.all(), required= True)
+    
 
     class Meta:
         model = Posts
