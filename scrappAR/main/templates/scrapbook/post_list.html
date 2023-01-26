@@ -22,6 +22,14 @@
 		</div>
 	</div>
 
+	<form action = "{%url 'discover:discover' %}" method="POST" name = "discover" enctype="multipart/form-data">
+		<select name="scrapbook" id = 'select-scrapbook' class = "form-control">
+		{% for scrapbook in Scrapbook %}
+			<option value="{{ scrapbook.id }}">{{ scrapbook.name }}</option>
+		{% endfor %}
+		</select>
+	</form>
+
 	{% for post in post_list %}
 	<div class="row justify-content-center mt-3">
 		<div class="col-md-5 col-sm-12 border-bottom position-relative">

@@ -1,11 +1,11 @@
 from .models import Image
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.views import View
-from .models import Posts, Comment, Likes
+from .models import Posts, Comment, Likes, Scrapbook
 from .forms import PostForm, CommentForm
 from django.views.generic.edit import UpdateView, DeleteView
 from django.views.decorators.csrf import csrf_exempt
@@ -48,6 +48,11 @@ class PostListView(View):
 
 		return render(request, 'scrapbook/post_list.html', context)
 
+	def select_scrapbook(request):
+		template_name = 'scrapbook/post_list.html'
+		scrapbookcontext= Scrapbook.objects.all()
+		return render(request, template_name, {'scrapbook': scrapbookcontext})
+
 class PostDetailView(View):
 	def gets(self, request, pk, *args, **kwargs):
 		post = Posts.objects.get(pk=pk)
@@ -63,7 +68,7 @@ class PostDetailView(View):
 		return render(request, 'scrapbook/post_details.html', context)
 
 	def post(self, request, pk, *args, **kwargs):
-		post = Post.objects.get(pk=pk)
+		post = Posts.objects.get(pk=pk)
 		form = CommentForm(request.POST)
 
 		if form.is_valid():
@@ -84,7 +89,7 @@ class PostDetailView(View):
 
 	def like(request, post_id):
 		user = request.user
-		post = Post.objects.get(id=post_id)
+		post = Posts.objects.get(id=post_id)
 		current_likes = post.likes 
 		liked = Likes.objects.filter(user=user, post=post).count()
 		if not liked:

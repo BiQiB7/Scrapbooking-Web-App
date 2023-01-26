@@ -12,11 +12,13 @@ class PostForm(forms.ModelForm):
     required=False,
     widget=forms.ClearableFileInput(attrs={
     'multiple': True
-    })
+    })  
 )
+    scrapbook = forms.CharField()
+
     class Meta:
         model = Posts
-        fields = ['body']
+        fields = ['body','scrapbook']
     
     #body = forms.CharField(max_length=2200)
     # drop down select from db

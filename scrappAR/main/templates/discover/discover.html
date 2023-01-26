@@ -1,0 +1,18 @@
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row justify-content-center mt-3 mb-5">
+    <div class="col-md-5 col-sm-12 border-bottom">
+        <form action = "{%url 'discover:discover' %}" method="POST" name = "discover">
+            {% csrf_token %}
+            {{ form | crispy }}
+            <div class="d-grid gap-2">
+                <input type="submit" value="Submit">
+            </div>
+        </form>	
+    </div>
+</div>
+
+
+{% endblock %}

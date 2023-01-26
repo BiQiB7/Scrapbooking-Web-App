@@ -2,12 +2,28 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User 
 
+
+class Topic(models.Model):
+    name = models.CharField(max_length = 200)
+    
+    def __str__(self):
+        return self.name
+
+class Scrapbook(models.Model):
+	name = models.CharField(max_length = 200)
+	# posts = Posts.objects.all()
+	def __str__(self):
+		return self.name
+
 class Posts(models.Model):
 	created_on = models.DateTimeField(default = timezone.now)
 	author = models.ForeignKey(User, on_delete=models.CASCADE)
 	body = models.TextField()
 	image = models.ManyToManyField('Image', blank=True, null=True)
+	scrapbook = models.ForeignKey(Scrapbook, on_delete=models.CASCADE, null= True)
 	# photo = models.ImageField(upload_to='scrapbook/post_pics', blank=True, null=True, default = 'blank.png')
+	def __str__(self):
+		return self.name
 
 class Image(models.Model):
 	image = models.ImageField(upload_to='media/', blank=True, null=True, default = 'blank.png')
@@ -21,3 +37,4 @@ class Comment(models.Model):
 
 class Likes(models.Model):
     like = models.IntegerField()
+
