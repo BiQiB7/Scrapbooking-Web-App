@@ -1,33 +1,20 @@
 from django.shortcuts import render
 from django.views import View
-from scrapbook.models import Scrapbook, Topic
+from scrapbook.models import Scrapbook
+from discover.models import Topic
 from .forms import CreateScrapbookForm
+from django.db.models import Q
 
 # Create your views here.
-class DiscoverView(View):
-    def get(self, request, *args, **kwargs):
-        if request.method == "GET":
-            scrapbooks = Scrapbook.objects.all()
-            form = CreateScrapbookForm()
-            context = {
-                'scrapbooks': scrapbooks,
-                'form':form,
-            }
-        return render(request, 'discover/discover.html', context)
-
-    def post(self, request, *args, **kwargs):
-        if request.method == "POST":
-            scrapbooks = Scrapbook.objects.all()
-            form = CreateScrapbookForm(request.POST, request.FILES)
-            # form.topic = 
-			# files = request.FILES.getlist('image')
-            if form.is_valid():
-                new_scrapbook = form.save(commit=False)
-            context = {
-                'scrapbooks': scrapbooks,
-                'form':form,
-            }
-        return render(request,'discover/discover.html', context)
+def discover(request):
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    scrapbooks = Scrapbook.objects.filter(
+    Q(topic__name__icontains=q) | 
+    Q(name__icontains=q)
+    )
+    topics = Topic.objects.all()
+    return render(request, 'discover/discover.html', {'scrapbooks': scrapbooks, 'topics': topics})
+   
                 #top = Topic(form.topic)
                 #top.save()
                 #new_scrapbook.topic.add(top)
@@ -39,3 +26,6 @@ class DiscoverView(View):
 			#	img.save()
 			#	new_post.image.add(img)
 			#new_post.save()
+def scrapbook(request, pk):
+    scrapbook = Scrapbook.objects.get(id=pk)     
+    return render(request, 'scrapbook/scrapbook.html', {'scrapbook': scrapbook})

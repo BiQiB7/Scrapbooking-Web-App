@@ -52,6 +52,11 @@ class PostListView(View):
 		results = select_scrapbook.objects.all()
 		return render(request,"scrapbook/post_list.html",{"select_scrapbook": results})
 
+	
+	def scrapbook(request, pk):
+		scrapbook = Scrapbook.objects.get(id=pk)     
+		return render(request, 'scrapbook/post_list.html', {'scrapbook': scrapbook})
+
 class PostDetailView(View):
 	def gets(self, request, pk, *args, **kwargs):
 		post = Posts.objects.get(pk=pk)

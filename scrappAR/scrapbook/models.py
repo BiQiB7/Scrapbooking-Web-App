@@ -1,19 +1,21 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User 
+from discover.models import Scrapbook
 
-
-class Topic(models.Model):
-    name = models.CharField(max_length = 200)
+# class Topic(models.Model):
+#    name = models.CharField(max_length = 200)
     
-    def __str__(self):
-        return self.name
+#    def __str__(self):
+#        return self.name
 
-class Scrapbook(models.Model):
-	name = models.CharField(max_length = 200)
+# class Scrapbook(models.Model):
+#	name = models.CharField(max_length = 200)
+#	topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
 	# posts = Posts.objects.all()
-	def __str__(self):
-		return self.name
+	
+#	def __str__(self):
+#		return self.name
 
 class select_scrapbook(models.Model):
 	scrapbook = models.CharField(max_length=100)

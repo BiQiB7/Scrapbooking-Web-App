@@ -1,5 +1,6 @@
 from django import forms
-from scrapbook.models import Scrapbook, Topic
+from scrapbook.models import Scrapbook
+from discover.models import Topic
 
 class CreateScrapbookForm(forms.ModelForm):
     name = forms.CharField(
