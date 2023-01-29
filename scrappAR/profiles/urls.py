@@ -7,6 +7,6 @@ urlpatterns = [
     #path('about', views.about , name = 'about'),
     #path('services',views.services,name='services'),
     #path('contact',views.contact, name='contact'),
-    path('profile',views.Profile,name='profile'),
+    path('profile/<str:pk>',views.profile,name='profile'),
     
 ]

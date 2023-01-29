@@ -14,9 +14,6 @@ class PostForm(forms.ModelForm):
     'multiple': True
     })  
 )
-    # scrapbook = forms.ModelChoiceField(
-    # label = "Item choices", queryset = Scrapbook.objects.all(), required= True)
-    
 
     class Meta:
         model = Posts

@@ -23,9 +23,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),
     path('', include('users.urls')),
-    path('', include('profiles.urls')),
+    path('', include(('profiles.urls','profile'),namespace = 'profile')),
     path('', include(('discover.urls','discover'),namespace = 'discover')),
-    path('scrapbook/', include(('scrapbook.urls','scrapbook'),namespace = 'scrapbook')),
+    path('', include(('scrapbook.urls','scrapbook'),namespace = 'scrapbook')),
     # path('scrapbook/', include('scrapbook.urls')),
 ]
 

@@ -14,6 +14,6 @@ class Profile(models.Model):
     profileimg = models.ImageField(upload_to = 'profile_images', default = 'blank-user.jpg' )
     location = models.CharField(max_length = 100, blank = True)
     dateOfBirth = models.DateField(default = date.today)
-  
+    objects = models.Manager()
     def __str_(self):
-        return self.user
+        return self.user.username

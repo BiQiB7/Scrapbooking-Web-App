@@ -21,7 +21,7 @@ def user_login(request):
 
         if user is not None:
             login(request, user)
-            return redirect('../scrapbook/listview')
+            return redirect('../discover')
         else:
             messages.error(request, 'Username OR password invalid')
 

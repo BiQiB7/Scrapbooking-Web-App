@@ -54,8 +54,31 @@ class PostListView(View):
 
 	
 	def scrapbook(request, pk):
-		scrapbook = Scrapbook.objects.get(id=pk)     
-		return render(request, 'scrapbook/post_list.html', {'scrapbook': scrapbook})
+
+		scrapbook = Scrapbook.objects.get(id=pk)    
+
+		post = Posts.objects.all().order_by('-created_on')
+		form = PostForm(request.POST, request.FILES)
+		files = request.FILES.getlist('image')
+			
+		
+		if form.is_valid():
+			new_post = form.save(commit=False)
+			new_post.author = request.user
+			new_post.save()
+
+		for f in files:
+			img = Image(image=f)
+			img.save()
+			new_post.image.add(img)
+			new_post.save()
+		context = {
+			'post_list': post,
+			'form': form,
+			} 
+		# pk = self.kwargs['pk']
+		# return reverse_lazy('scrapbook', kwargs={'pk': pk})
+		return render(request, 'scrapbook/post_list.html', context)
 
 class PostDetailView(View):
 	def gets(self, request, pk, *args, **kwargs):

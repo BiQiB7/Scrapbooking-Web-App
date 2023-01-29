@@ -2,7 +2,7 @@ from django.urls import path
 from .views import PostListView, PostDetailView, PostEditView, PostDeleteView, CommentDeleteView
 
 urlpatterns = [
-	path('', PostListView.as_view(), name='post-list'),
+	path('scrapbook/', PostListView.as_view(), name='post-list'),
 	path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
 	path('', PostListView.show_scrapbooks),
 	path('post/edit/<int:pk>/', PostEditView.as_view(), name='post-edit'),

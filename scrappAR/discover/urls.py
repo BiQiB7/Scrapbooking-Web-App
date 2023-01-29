@@ -4,5 +4,5 @@ from .views import discover, scrapbook
 
 urlpatterns = [
     path('discover/',discover,name='discover'),  
-    path('scrapbook/<str:pk>', scrapbook, name = 'scrapbook')
+    # path('scrapbook/<str:pk>/', scrapbook, name = 'scrapbook')
 ]
