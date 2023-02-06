@@ -16,10 +16,8 @@ class PostListView(View):
 	def get(self, request, *args, **kwargs):
 		if request.method =="GET":
 			post = Posts.objects.all().order_by('-created_on')
-			form = PostForm()
 			context = {
 				'post_list': post,
-				'form': form,
 			} 
 
 		return render(request, 'scrapbook/post_list.html', context)

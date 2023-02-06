@@ -2,46 +2,56 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .forms import LoginForm, UserRegistrationFrom
+from .forms import signupForm, loginForm
 from django.http import HttpResponse
 from django.views import View
-from django.contrib import messages
+from django.contrib import messages, auth
 # Create your views here.
-def user_login(request):
+def loginPage(request):
+    form = loginForm(request.POST)
+
     if request.method == 'POST':
-        username = request.POST.get('UserName')
-        password = request.POST.get('Password')
-
-        try:
-            user = User.objects.get(username = username)
-        except:
-            messages.error(request, 'User does not exist')
-
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            return redirect('../discover')
+        if request.POST.get('UserName') is None or request.POST.get('Password') is None:
+            messages.error(request, 'Please enter your username or password.')
+            return render(request, 'users/signup.html')
         else:
-            messages.error(request, 'Username OR password invalid')
+            user = auth.authenticate(username = request.POST.get('UserName'), password = request.POST.get('Password'))
 
-    context = {}
-    return render(request, 'main/index.html', context)
-
-def user_registration(request):
-    if request.method == 'POST':
-        user_form = UserRegistrationFrom(request.POST)
-        if user_form.is_valid():
-            new_user = user_form.save(commit = False)
-            new_user.set_password(user_form.cleaned_data['password'])
-            new_user.save()
-            messages.success(request, "Registration successful.")
-            # return render(request,'users/register_done.html')
-            return redirect("users:scrapbook/listview")
+            if user is not None:
+                auth.login(request, user)
+                return redirect('discover:discover')
+            else:
+                messages.success(request, 'You have successfully login.')
+                return render(request, 'users/index.html')
     else:
-        user_form = UserRegistrationFrom()
-    return render(request, 'users/register.html',{'user_form':user_form})
+        return render(request, 'users/index.html')
 
-#class user_registration(View):
-#    def get(self,request,*args,**kwargs):
-#        return render(request, 'users/register.html')
+def signout(request):
+    
+    auth.logout(request)
+    messages.success(request, "Logged Out Successfully.")
+    return redirect('login')
+
+def signupPage(request):
+    #form = signupForm(request.POST)
+    #if form.is_valid():
+    context = {}
+    if request.method == "POST":
+        while request.POST.get('txtPassword2') == request.POST.get('txtPassword'):
+                try:
+                    User.objects.get(username = request.POST.get('txtUserName'))
+                    
+                    return render (request,'users/signup.html', {'error':'Username is already taken!'})
+                except User.DoesNotExist:
+                    newuser = User.objects.create_user(username = request.POST.get('txtUserName'), first_name = request.POST.get('txtFirstName'),last_name = request.POST.get('txtLastName'), email = request.POST.get('txtEmail'), password = request.POST.get('txtPassword'))
+                    
+                    auth.login(request, newuser)
+                    return redirect('discover')
+        else:
+            messages.error(request, 'Password does not match!')
+            return render(request, 'users/signup.html', context)
+    else:
+        return render(request, "users/signup.html",context)
+
+def resetPage(request):
+    return render(request, 'users/resetpassword.html')

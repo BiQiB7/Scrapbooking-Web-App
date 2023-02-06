@@ -18,14 +18,18 @@ from django.urls import path, include, re_path
 from django.urls import re_path as url
 from django.conf import settings
 from django.conf.urls.static import static
+import profiles.views as views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),
-    path('', include('users.urls')),
+    path('', include(('users.urls','users'),namespace = 'users')),
     path('', include(('profiles.urls','profile'),namespace = 'profile')),
     path('', include(('discover.urls','discover'),namespace = 'discover')),
     path('', include(('scrapbook.urls','scrapbook'),namespace = 'scrapbook')),
+    path('', include(('analytics.urls','analytics'),namespace = 'analytics')),
+    # path('profile/', views.home,namespace='home'),
+    # path('', include(('profiles.urls','home'),namespace = 'home')),
     # path('scrapbook/', include('scrapbook.urls')),
 ]
 

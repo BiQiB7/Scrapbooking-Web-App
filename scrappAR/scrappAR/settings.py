@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'scrapbook',
     'profiles',
     'discover',
+    'analytics',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -2,21 +2,23 @@ from django import forms
 from django.contrib.auth.models import User
 from django.db import models
 
-class LoginForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput)
+class loginForm(forms.Form):
+    UserName = forms.CharField(max_length=100)
+    Password = forms.PasswordInput()
 
-class UserRegistrationFrom(forms.ModelForm):
-    id = models.AutoField(primary_key=True, null= False)
-    txtFirstName = forms.CharField(label = 'First name')
-    txtLastName = forms.CharField(label = 'Last name')
-    txtEmail = forms.EmailField(label = 'Email address', max_length= 200)
-    txtPassword = forms.CharField(label='Password',widget=forms.PasswordInput)
-    birthdaytime = forms.DateField(label = 'Birthday')
+class signupForm(forms.Form):
+    txtUserName = forms.CharField(max_length=100)
+    txtPassword = forms.PasswordInput()
+    txtPassword2 = forms.PasswordInput()
+    txtFirstName = forms.CharField(max_length=100)
+    txtLastName = forms.CharField(max_length=100)
+    txtEmail = forms.EmailField()
+    dateofbirth = forms.DateField()
+    gender = forms.CharField(max_length=30)
     
-    class Meta:
-        model = User
-        fields = {'id','txtFirstName','txtLastName','txtEmail','birthdaytime'}
+    # class Meta:
+    #    model = User
+    #    fields = {'id','txtFirstName','txtLastName','txtEmail','birthdaytime'}
     # def check_password(self):
     #    if self.cleaned_data['password'] != self.cleaned_data['password2']:
     #        raise forms.ValidationError('Passwords do not match')

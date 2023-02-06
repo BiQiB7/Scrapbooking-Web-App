@@ -1,0 +1,82 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+
+body {
+    background: url(/static/images/white_wall_hash.webp) repeat 0 0;
+}
+
+#navbar {
+    display: inline;
+    position: fixed;
+    width: 100%;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #000;
+    background: #000;
+}
+
+#navbuttons {
+    font-family: Tahoma, Helvetica, sans-serif;
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+#navbuttons:hover {
+    background-color: rgb(54, 54, 54);
+}
+
+#textplanation {
+    font-family: Tahoma, Helvetica sans-serif;
+    position: fixed;
+    font-size: 32px;
+    color: black;
+    top: 7%;
+
+}
+
+.text {
+    background-color: #f1f1f1;
+    font-family: Tahoma, Helvetica sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    color: black;
+}
+
+.collapsibles {
+    background-color: #eee;
+    position: fixed;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    top: 40%;
+}
+
+.active, .collapsibles:hover {
+    background-color: #ccc;
+}
+
+#basic_stats {
+    position: fixed;
+    top: 30%;
+}
+
+#more_details {
+    position: fixed;
+    top: 45%;
+}

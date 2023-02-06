@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Analytics Dashboard</title>
+    <script src="https://cdn.flexmonster.com/flexmonster.js"></script> <!--Will need to find alternative, as Flexmonster is not open-source-->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="main/analytics.css">
+</head>
+<body>
+  <div id='header'>
+      <ul id="navbar">
+        <li><a href="home" id="navbuttons">Home</a></li>
+        <li><a href="discover" id="navbuttons">Discover</a></li>
+        <li><a href="profile" id="navbuttons">Profile</a></li>
+        <li><a href="../" id="navbuttons">Analytics</a></li>
+      </ul>
+  </div>
+
+  <div id="textplanation">
+    <h1 id="summary">Welcome to your analytics page! This is where we display a brief overview of statistics related to your account!</p>
+    <h1 id="summary">For now, we've just got some basic numbers on how much you've contributed to this site, but we plan to eventually add data visualised in various forms of graphs!</p>
+  </div>
+
+  <div id="basic_stats">
+    <p class="text">Basic statistics:</p>
+    <p class="text">Posts Created:</p>
+    <p class="text">Scrapbooks Created:</p>
+  </div>
+
+ <details id="more_details">
+  <summary class="text">
+    <b>More Details:</b>
+  </summary>
+  <p class="text">Here is where tables and graphs will be displayed once implemented.</p>
+  <!--Was going great until I found out that Flexmonster is a proprietary thing and not open-source, so I'll need to find a different way to visualise the data.-->
+ </details>
+
+</body>
+</html>

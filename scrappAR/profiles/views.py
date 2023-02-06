@@ -5,14 +5,23 @@ from django.http import HttpResponse
 from users.models import Profile
 from django.views import View
 
-def profile(request, pk):
-       # pk = self.kwargs.get('pk')
-    user_object = User.objects.get(id = pk)
-    user_profile = Profile.objects.get(user = user_object)
+from django.shortcuts import render
+from django.http import HttpResponse
+from .models import profile
+from django.template import loader
+# Create your views here.
+def home(request):
+    proz = profile.objects.values_list('name', flat=True)
+    prof = profile.objects.values_list('desc', flat=True)
+    prod = profile.objects.values_list('followers', flat=True)
     
+     
+    template = loader.get_template('profiles/profiles.html')
     context = {
-        'user_object': user_object,
-        'user_profile': user_profile,
-        }
-        
-    return render(request,'profiles/profiles.html')
+    'mem': proz,
+    'can': prof,
+    'dam': prod
+    
+  }
+    
+    return HttpResponse(template.render(context, request))

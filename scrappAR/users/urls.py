@@ -5,6 +5,10 @@ from django.urls import re_path as url
 from scrapbook import views as scrapbookviews
 from profiles import views as profileviews
 urlpatterns = [
+    path('', usersview.loginPage, name='login'),
+    path('register/', usersview.signupPage, name='signup'),
+    path('login/', usersview.loginPage, name = 'login'),
+    path('reset/',usersview.resetPage, name = 'reset'),
     # path('users/register', usersview.user_registration.as_view(), name = 'register'),
     # path('scrapbook/listview', scrapbookviews.PostListView.as_view(), name = 'listview'),
     #path('scrapbook/detailview',scrapbookviews.PostDetailView.as_view(), name = 'detailview'),
