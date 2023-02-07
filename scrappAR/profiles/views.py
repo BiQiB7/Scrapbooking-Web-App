@@ -1,32 +1,19 @@
 from django.shortcuts import render
-from django.contrib.auth.models import User
-from django.shortcuts import render
 from django.http import HttpResponse
-from users.models import Profile
-from django.views import View
-
-from django.shortcuts import render
-from django.http import HttpResponse
-from .models import profile
+# from .models import profile
 from django.template import loader
-# Create your views here.
-def profile_view(request):
-    profiles = profile.objects.all()
-    # name = profile.objects.values_list('name', flat=True)
-    # name = profile.objects.name
-    # desc = profile.objects.values_list('desc', flat=True)
+from .forms import ImageForm
+from .models import Image
 
-    # followers = profile.objects.values_list('followers', flat=True)
-    # followers = profile.followers
-     
-    # template = loader.get_template('profiles/profiles.html')
-    # context = {
-    # 'name' : name,
-    #  'desc' : desc,
-    # 'followers' : followers,
-  #} 
-    context = {
-      'profile' : profiles,
-    }
-    return render(request, 'profiles/profiles.html', context)
-    # return HttpResponse(template.render(context, request))
+# Create your views here.
+def index(request):
+    if request.method == "POST":
+     form=ImageForm(data=request.POST,files=request.FILES)
+     if form.is_valid():
+       form.save()
+       obj=form.instance
+       return render(request,"profiles/profiles.html",{"obj":obj})
+    else:
+        form=ImageForm()
+        img=Image.objects.all()
+    return render(request,"profiles/profiles.html",{"img":img,"form":form})
