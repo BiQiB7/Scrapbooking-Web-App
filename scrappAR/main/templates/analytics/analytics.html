@@ -1,4 +1,6 @@
+{% extends 'main/base.html' %}
 {% load static %}
+{% block content %}
 
 <!DOCTYPE html>
 <html>
@@ -7,17 +9,8 @@
     <title>Analytics Dashboard</title>
     <script src="https://cdn.flexmonster.com/flexmonster.js"></script> <!--Will need to find alternative, as Flexmonster is not open-source-->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <link rel="stylesheet" href="main/analytics.css">
 </head>
 <body>
-  <div id='header'>
-      <ul id="navbar">
-        <li><a href="home" id="navbuttons">Home</a></li>
-        <li><a href="discover" id="navbuttons">Discover</a></li>
-        <li><a href="profile" id="navbuttons">Profile</a></li>
-        <li><a href="../" id="navbuttons">Analytics</a></li>
-      </ul>
-  </div>
 
   <div id="textplanation">
     <h1 id="summary">Welcome to your analytics page! This is where we display a brief overview of statistics related to your account!</p>
@@ -40,3 +33,63 @@
 
 </body>
 </html>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+
+body {
+    background: url(/static/images/white_wall_hash.webp) repeat 0 0;
+}
+
+#textplanation {
+    font-family: Tahoma, Helvetica sans-serif;
+    position: fixed;
+    font-size: 32px;
+    color: black;
+    top: 7%;
+
+}
+
+.text {
+    background-color: #f1f1f1;
+    font-family: Tahoma, Helvetica sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    color: black;
+}
+
+.collapsibles {
+    background-color: #eee;
+    position: fixed;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    top: 40%;
+}
+
+.active, .collapsibles:hover {
+    background-color: #ccc;
+}
+
+#basic_stats {
+    position: fixed;
+    top: 40%;
+}
+
+#more_details {
+    position: fixed;
+    top:55%;
+}
+</style>
+{% endblock content %}

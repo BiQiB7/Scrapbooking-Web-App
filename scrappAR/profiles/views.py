@@ -10,18 +10,23 @@ from django.http import HttpResponse
 from .models import profile
 from django.template import loader
 # Create your views here.
-def home(request):
-    proz = profile.objects.values_list('name', flat=True)
-    prof = profile.objects.values_list('desc', flat=True)
-    prod = profile.objects.values_list('followers', flat=True)
-    
+def profile_view(request):
+    profiles = profile.objects.all()
+    # name = profile.objects.values_list('name', flat=True)
+    # name = profile.objects.name
+    # desc = profile.objects.values_list('desc', flat=True)
+
+    # followers = profile.objects.values_list('followers', flat=True)
+    # followers = profile.followers
      
-    template = loader.get_template('profiles/profiles.html')
+    # template = loader.get_template('profiles/profiles.html')
+    # context = {
+    # 'name' : name,
+    #  'desc' : desc,
+    # 'followers' : followers,
+  #} 
     context = {
-    'mem': proz,
-    'can': prof,
-    'dam': prod
-    
-  }
-    
-    return HttpResponse(template.render(context, request))
+      'profile' : profiles,
+    }
+    return render(request, 'profiles/profiles.html', context)
+    # return HttpResponse(template.render(context, request))

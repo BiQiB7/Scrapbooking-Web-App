@@ -14,18 +14,7 @@ def discover(request):
     )
     topics = Topic.objects.all()
     return render(request, 'discover/discover.html', {'scrapbooks': scrapbooks, 'topics': topics})
-   
-                #top = Topic(form.topic)
-                #top.save()
-                #new_scrapbook.topic.add(top)
-                #new_scrapbook.save()
-				# new_post.save()
 
-			#for f in files:
-			#	img = Image(image=f)
-			#	img.save()
-			#	new_post.image.add(img)
-			#new_post.save()
 def scrapbook(request, pk):
     scrapbook = Scrapbook.objects.get(id=pk)     
     return render(request, 'scrapbook/scrapbook.html', {'scrapbook': scrapbook})
