@@ -28,6 +28,7 @@ urlpatterns = [
     path('', include(('discover.urls','discover'),namespace = 'discover')),
     path('', include(('scrapbook.urls','scrapbook'),namespace = 'scrapbook')),
     path('', include(('analytics.urls','analytics'),namespace = 'analytics')),
+    # path('', include(('camera.urls','camera'),namespace='camera')),
     # path('profile/', views.home,namespace='home'),
     # path('', include(('profiles.urls','home'),namespace = 'home')),
     # path('scrapbook/', include('scrapbook.urls')),

@@ -1,19 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <title>Signup Page</title>
 </head>
-<body style="background-color: lightgrey;">
+<style>
+    .pushable {
+        background: #2f543b;
+        border-radius: 12px;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        outline-offset: 4px;
+    }
+
+    .front {
+        display: block;
+        padding: 12px 42px;
+        border-radius: 12px;
+        background: #578e69;
+        color: white;
+        transform: translateY(-6px);
+    }
+
+    .pushable:active .front {
+        transform: translateY(-2px);
+    }
+</style>
+
+<body style="background-color: #fffee8">
     <div class="container">
         <div class="row justify-content-center mt-5">
             <div class="col-md-10 col-sm-12 text-center">
-                <div class="display-2"><h1 style="padding-top: auto;">Sign Up</h1>
+                <div class="display-2">
+                    <h1 style="padding-top: auto;">Sign Up</h1>
                 </div>
                 <p class="mt-1 lead"><b>Create an account. It's easy.</b></p>
 
@@ -21,57 +48,59 @@
                     {% csrf_token %}
 
                     <div class="validate-input" data-validate="Username is required">
-                        <input class="justify-content-center" type="text" name="txtUserName" id="txtUserName" placeholder="&nbsp&nbsp Your Username" style="font-family: sans-serif; font-size: 22px; height: 50px; width: 700px; border-radius: 10px;">
+                        <input class="justify-content-center" type="text" name="txtUserName" id="txtUserName"
+                            placeholder="&nbsp&nbsp Your Username"
+                            style="margin:auto;text-align:center; font-family: sans-serif; font-size: 20px; padding-top: 15px; display: block; box-sizing: border-box;border: 4px solid #fff; -webkit-border-radius:20px;-moz-border-radius:20px;box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.5);-moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5); width:600px;padding-bottom: 8px;">
                         {% for err in form.txtUserName.errors %}
-                            <small class="text-danger">{{err}}</small>
+                        <small class="text-danger">{{err}}</small>
                         {% endfor %}
                     </div>
                     <div class="validate-input" data-validate="Firstname is required">
-                        <input class="justify-content-center mt-3" type="text" name="txtFirstName" id="txtFirstName" placeholder="&nbsp&nbsp First name" style="font-family: sans-serif; font-size: 22px; height: 50px; width: 700px; border-radius: 10px;">
+                        <input class="justify-content-center mt-3" type="text" name="txtFirstName" id="txtFirstName"
+                            placeholder="&nbsp&nbsp First name"
+                            style="margin:auto;text-align:center; font-family: sans-serif; font-size: 20px; padding-top: 15px; display: block; box-sizing: border-box;border: 4px solid #fff; -webkit-border-radius:20px;-moz-border-radius:20px;box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.5);-moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5); width:600px;padding-bottom: 8px;">
                     </div>
                     <div class="validate-input" data-validate="Lastname is required">
-                        <input class="justify-content-center mt-3" type="text" name="txtLastName" id="txtLastName" placeholder="&nbsp&nbsp Last name" style="font-family: sans-serif; font-size: 22px; height: 50px; width: 700px; border-radius: 10px;">
+                        <input class="justify-content-center mt-3" type="text" name="txtLastName" id="txtLastName"
+                            placeholder="&nbsp&nbsp Last name"
+                            style="margin:auto;text-align:center; font-family: sans-serif; font-size: 20px; padding-top: 15px; display: block; box-sizing: border-box;border: 4px solid #fff; -webkit-border-radius:20px;-moz-border-radius:20px;box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.5);-moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5); width:600px;padding-bottom: 8px;">
                     </div>
                     <div class="validate-input" data-validate="Username is required">
-                        <input class="justify-content-center mt-3" type="text" name="txtEmail" id="txtEmail" placeholder="&nbsp&nbsp Mobile number or email address" style="font-family: sans-serif; font-size: 22px; height: 50px; width: 700px; border-radius: 10px;">
+                        <input class="justify-content-center mt-3" type="text" name="txtEmail" id="txtEmail"
+                            placeholder="&nbsp&nbsp Mobile number or email address"
+                            style="margin:auto;text-align:center; font-family: sans-serif; font-size: 20px; padding-top: 15px; display: block; box-sizing: border-box;border: 4px solid #fff; -webkit-border-radius:20px;-moz-border-radius:20px;box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.5);-moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5); width:600px;padding-bottom: 8px;">
                     </div>
                     <div class="validate-input" data-validate="Password is required">
-                        <input class="justify-content-center mt-3" type="password" name="txtPassword" id="txtPassword" placeholder="&nbsp&nbsp New Password" style="font-family: sans-serif; font-size: 22px; height: 50px; width: 700px; border-radius: 10px;">
+                        <input class="justify-content-center mt-3" type="password" name="txtPassword" id="txtPassword"
+                            placeholder="&nbsp&nbsp New Password"
+                            style="margin:auto;text-align:center; font-family: sans-serif; font-size: 20px; padding-top: 15px; display: block; box-sizing: border-box;border: 4px solid #fff; -webkit-border-radius:20px;-moz-border-radius:20px;box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.5);-moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5); width:600px;padding-bottom: 8px;">
                     </div>
                     <div class="validate-input" data-validate="Password is required">
-                        <input class="justify-content-center mt-3" type="password" name="txtPassword2" id="txtPassword2" placeholder="&nbsp&nbsp Confirm Your Password" style="font-family: sans-serif; font-size: 22px; height: 50px; width: 700px; border-radius: 10px;">
+                        <input class="justify-content-center mt-3" type="password" name="txtPassword2" id="txtPassword2"
+                            placeholder="&nbsp&nbsp Confirm Your Password"
+                            style="margin:auto;text-align:center; font-family: sans-serif; font-size: 20px; padding-top: 15px; display: block; box-sizing: border-box;border: 4px solid #fff; -webkit-border-radius:20px;-moz-border-radius:20px;box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.5);-moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5); width:600px;padding-bottom: 8px;">
                     </div>
 
-                    <div class="justify-content-center mt-2">
-                        <label style="font-family: sans-serif; font-size: 18px;">Date of Birth</label>
-                        <br>
-                        <input type="date" name="dateofbirth" value="&nbsp&nbsp Date of Birth" style="font-family: sans-serif; font-size: 22px; color: gray; text-align: center; height: 50px; width: 700px; border-radius: 10px;">
-                    </div>
-
-                    <div class="justify-content-center mt-2">
-                        <label style="font-family: sans-serif; font-size: 18px; text-align: left;">Gender</label>
-                        <br>
-                        <select name="slcgender" style="font-family: sans-serif; font-size: 22px; color: gray; text-align: center; height: 50px; width: 700px; border-radius: 10px;">
-                            <option value="0" style="font-family: sans-serif; font-size: 18px;" selected="selected">Gender</option>
-                            <option value="1" style="font-family: sans-serif; font-size: 18px;">Male</option>
-                            <option value="2" style="font-family: sans-serif; font-size: 18px;">Female</option>
-                            <option value="3" style="font-family: sans-serif; font-size: 18px;">Prefer not to say</option>
-                        </select>
-                    </div>
-                        
                     <div class="d-flex justify-content-center mt-4">
-                        <p style="font-family: sans-serif;font-size: 18px; text-align: left;">By clicking Sign Up, you agree to our Terms of Services and Privacy Policy.</p>
+                        <p style="font-family: sans-serif;font-size: 18px; text-align: left;">By clicking Sign Up, you
+                            agree to our Terms of Services and Privacy Policy.</p>
                     </div>
                     <div class="d-flex justify-content-center mt-2">
-                        <button type="submit" style="font-family: 'Roboto',sans-serif;font-size: 18px;font-weight: bold;background-color: #00ffb5;width: 350px;padding: 20px;text-align: center;text-decoration: none;text-transform: uppercase;color: black;border-radius: 10px;cursor: pointer;box-shadow: 0 0 10px rgba(0,0,0,0.1);border-color: transparent;">Sign Up</button>
+                        <button type="submit" class = "pushable" style="font-family: 'Roboto',sans-serif;width:400px;font-size: 20px;">
+                        <span class = "front">
+                            Sign Up
+                        </span>
+                    </button>
                     </div>
                     <div class="d-flex justify-content-center mt-4">
                         <p style="font-family: sans-serif;font-size: 18px; text-align: left;">Have an account?</p>&nbsp;
-                        <a href="{% url 'users:login' %}" style="font-family: 'Roboto', sans-serif;font-size: 18px;">Login.</a>
+                        <a href="{% url 'users:login' %}"
+                            style="font-family: 'Roboto', sans-serif;font-size: 18px;">Login.</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </body>
+
 </html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>Take a picture!</title>
+</head>
+
+<body style="background-color:#e8d089">
+    <div class="card2">
+
+        <body>
+            <input type=button class="btn" value=" << Previous Page" onClick="javascript:history.go(-1);"
+                style=" width: 150px; height: 40px; margin-bottom: 20px;">
+            <div class="container">
+                <video id="video" width="640" height="480" autoplay></video>
+                <canvas id="canvas" width="640" height="480" crossorigin="anonymous"></canvas>
+                <canvas id="preview-canvas" width="640" height="480" crossorigin="anonymous"></canvas>
+                <div class="buttons">
+                    <button class="pushable" style="margin-right: 20px" onclick="takePicture()">
+                        <span class="front">
+                            Take picture
+                        </span>
+                    </button>
+                    <button class="pushable" onclick="downloadImage()">
+                        <span class="front">
+                            Download
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <br>
+
+            <div id="image-grid"></div>
+        </body>
+    </div>
+</body>
+<style>
+    .card2 {
+        width: 900px;
+        padding: 30px;
+        margin: 40px auto;
+        background: #fffee8;
+        border-radius: 10px;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+        -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+        -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .canvas {
+        border: 1px solid #aaa;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    #canvas {
+        position: absolute;
+        z-index: 3;
+        border: 1px solid #aaa;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .btn {
+        background-color: rgb(71, 169, 146);
+        /* Blue background */
+        border: none;
+        /* Remove borders */
+        color: white;
+        /* White text */
+        padding: 10px 10px;
+        /* Some padding */
+        font-size: 16px;
+        /* Set a font size */
+        cursor: pointer;
+        /* Mouse pointer on hover */
+    }
+
+    /* Darker background on mouse-over */
+    .btn:hover {
+        background-color: rgb(122, 201, 204);
+    }
+
+    .btn-container {
+        position: relative;
+        /* Make the container a positioning context */
+        display: inline-block;
+        /* Make the container shrink to fit its contents */
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+
+    .btn-container i {
+        position: absolute;
+        /* Position the icon relative to the container */
+        top: 14px;
+        left: 5px;
+        right: 70px;
+        bottom: 0;
+        margin: auto;
+        margin-bottom: 20px;
+        padding-left: 10px;
+        display: flex;
+        justify-content: flex-end;
+        /* Add some spacing between the icon and the button */
+    }
+
+
+    .buttons {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pushable {
+        background: hsl(340deg 100% 32%);
+        border-radius: 12px;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        outline-offset: 4px;
+    }
+
+    .front {
+        display: block;
+        padding: 12px 42px;
+        border-radius: 12px;
+        font-size: 1rem;
+        background: hsl(345deg 100% 47%);
+        color: white;
+        transform: translateY(-6px);
+    }
+
+    .pushable:active .front {
+        transform: translateY(-2px);
+    }
+
+    #preview-canvas {
+        position: absolute;
+        z-index: 2;
+        border: 1px solid #aaa;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+
+    #video {
+        display: grid;
+        border: 1px solid #aaa;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    #image-grid {
+        max-height: 500px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(5, 150px);
+        grid-auto-rows: 150px;
+        /* grid-template-columns: auto auto auto auto; 
+            grid-gap: 5px;
+            column-gap: 3px; */
+        overflow-y: scroll;
+        border: 2px solid #fff;
+        box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.33);
+        -moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5);
+    }
+</style>
+<script>
+    var imageUrls = [
+        'https://cdn-icons-png.flaticon.com/512/4193/4193310.png', 'https://cdn-icons-png.flaticon.com/512/4228/4228674.png', 'https://cdn-icons-png.flaticon.com/512/4289/4289412.png', 'https://cdn-icons-png.flaticon.com/512/4213/4213653.png', 'https://cdn-icons-png.flaticon.com/512/4213/4213678.png',
+        'https://cdn-icons-png.flaticon.com/512/4213/4213641.png', 'https://cdn-icons-png.flaticon.com/512/5345/5345469.png', 'https://cdn-icons-png.flaticon.com/512/5612/5612048.png', 'https://cdn-icons-png.flaticon.com/512/8511/8511569.png', 'https://cdn-icons-png.flaticon.com/512/8511/8511575.png',
+        'https://cdn-icons-png.flaticon.com/512/8502/8502841.png', 'https://cdn-icons-png.flaticon.com/512/5821/5821921.png', 'https://cdn-icons-png.flaticon.com/512/8502/8502729.png', 'https://cdn-icons-png.flaticon.com/512/5020/5020313.png', 'https://cdn-icons-png.flaticon.com/512/5722/5722323.png',
+        'https://cdn-icons-png.flaticon.com/512/5722/5722023.png', 'https://cdn-icons-png.flaticon.com/512/5722/5722328.png', 'https://cdn-icons-png.flaticon.com/512/5722/5722317.png', 'https://cdn-icons-png.flaticon.com/512/5115/5115133.png', 'https://cdn-icons-png.flaticon.com/512/5115/5115152.png',
+        'https://cdn-icons-png.flaticon.com/512/5722/5722087.png', 'https://cdn-icons-png.flaticon.com/512/4228/4228712.png', 'https://cdn-icons-png.flaticon.com/512/4228/4228693.png', 'https://cdn-icons-png.flaticon.com/512/4213/4213681.png', 'https://cdn-icons-png.flaticon.com/512/4213/4213686.png',
+        'https://cdn-icons-png.flaticon.com/512/4359/4359976.png', 'https://cdn-icons-png.flaticon.com/512/4359/4359726.png', 'https://cdn-icons-png.flaticon.com/512/4392/4392506.png','https://cdn-icons-png.flaticon.com/512/4392/4392519.png','https://cdn-icons-png.flaticon.com/512/4392/4392491.png',
+        'https://cdn-icons-png.flaticon.com/512/5149/5149047.png','https://cdn-icons-png.flaticon.com/512/5149/5149067.png', 'https://cdn-icons-png.flaticon.com/512/5225/5225258.png','https://cdn-icons-png.flaticon.com/512/5225/5225514.png','https://cdn-icons-png.flaticon.com/512/5345/5345528.png'
+
+    ];
+    var imageGrid = document.getElementById('image-grid');
+    var canvas = document.getElementById('canvas');
+    var video = document.getElementById("video");
+    var preview;
+    var photodata;
+    var preview_canvas = document.getElementById('preview-canvas');
+    var preview_context = preview_canvas.getContext('2d');
+
+    var ctx = canvas.getContext('2d');
+    var images = []; // store sticker images
+    let dragIndex = -1;
+    let dragging = false;
+    let mouseX = 0;
+    let mouseY = 0;
+    var selectedImage = null;
+    //load the stickers
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function (stream) {
+            video.srcObject = stream;
+            video.play();
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    for (let i = 0; i < imageUrls.length; i++) {
+        const img = document.createElement('img');
+        //const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.height = 150;
+        img.weight = 150;
+        img.src = imageUrls[i];
+        console.log(img);
+        img.addEventListener('click', () => { //add sticker to canvas
+            addSelectedImageToCanvas(img);
+        });
+        imageGrid.appendChild(img); // display all stickers
+        //console.log(img);
+
+    }
+
+    canvas.addEventListener('mousedown', function (event) {
+        //console.log('mouse down');
+        mouseX = event.clientX - canvas.offsetLeft;
+        mouseY = event.clientY - canvas.offsetTop;
+
+        for (let i = images.length - 1; i >= 0; i--) {
+            const image = images[i];
+            image.crossOrigin = "anonymous";
+            const x = image.x;
+            const y = image.y;
+            const width = image.img.width;
+            const height = image.img.height;
+
+            if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height) {
+                dragIndex = i;
+                dragging = true;
+                break;
+            }
+        }
+    });
+    canvas.addEventListener('mousemove', function (event) {
+        console.log('mouse move');
+        if (dragging) {
+            const x = event.clientX - canvas.offsetLeft;
+            const y = event.clientY - canvas.offsetTop;
+            images[dragIndex].x = x;
+            images[dragIndex].y = y;
+
+            // remove image if go out of canvas
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
+            const imageWidth = images[dragIndex].img.width;
+            const imageHeight = images[dragIndex].img.height;
+            if (x + imageWidth < 0.01 * canvasWidth || x > 0.99 * canvasWidth ||
+                y + imageHeight < 0.01 * canvasHeight || y > 0.99 * canvasHeight) {
+                // Remove image from images array
+                images.splice(dragIndex, 1);
+                dragIndex = -1;
+                dragging = false;
+                // Update canvas
+                render();
+            } else {
+                render();
+            }
+        }
+    });
+
+    canvas.addEventListener('mouseup', function (event) {
+        dragging = false;
+        dragIndex = -1;
+    });
+
+
+
+    function downloadImage() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        console.log("download image background:");
+        console.log(preview);
+        ctx.drawImage(preview, preview.x, preview.y, canvas.width, canvas.height);
+        images.forEach(function (image) {
+            image.crossOrigin = "anonymous";
+            ctx.drawImage(image.img, image.x, image.y, 100, 100);
+        });
+
+
+
+        const link = document.createElement('a');
+        link.download = "image.png";
+        link.href = document.getElementById('canvas').toDataURL();
+        link.click();
+        console.log('download');
+    }
+    function addSelectedImageToCanvas(selectedImage) {
+        images.push({
+            img: selectedImage,
+            x: 0,
+            y: 0
+        });
+        console.log(selectedImage);
+        render();
+    }
+    function takePicture() {
+        console.log('take picture');
+        preview_context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        preview = new Image();
+        preview.setAttribute('crossOrigin', 'anonymous');
+        preview.src = preview_canvas.toDataURL('image/png');
+
+
+    }
+    function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        images.forEach(function (image) {
+            image.crossOrigin = "anonymous";
+            ctx.drawImage(image.img, image.x, image.y, 100, 100);
+        });
+
+    }
+
+
+</script>
+
+</html>

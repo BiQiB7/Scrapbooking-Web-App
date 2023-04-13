@@ -1,21 +1,26 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User 
-from discover.models import Scrapbook
 
-# class Topic(models.Model):
-#    name = models.CharField(max_length = 200)
+class Topic(models.Model):
+    name = models.CharField(max_length = 200, blank = True)
     
-#    def __str__(self):
-#        return self.name
-
-# class Scrapbook(models.Model):
-#	name = models.CharField(max_length = 200)
-#	topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
-	# posts = Posts.objects.all()
+    def __str__(self):
+        return self.name
+class Image(models.Model):
+	image = models.ImageField(upload_to='media/', blank=True, null=True, default = 'blank.png')
 	
-#	def __str__(self):
-#		return self.name
+class Scrapbook(models.Model):
+	title = models.CharField(max_length = 200)
+	topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, blank = True, null=True)
+	# cover = models.ImageField('Image',blank=True, null=True)
+	cover = models.ImageField(Image,upload_to='media/', blank=True, null=True, default = 'blank.png')
+	def set_cover(self, cover):
+		self.cover = cover
+		self.save()
+	def __str__(self):
+		return self.title
+	
 
 class select_scrapbook(models.Model):
 	scrapbook = models.CharField(max_length=100)
@@ -31,8 +36,9 @@ class Posts(models.Model):
 	# photo = models.ImageField(upload_to='scrapbook/post_pics', blank=True, null=True, default = 'blank.png')
 
 
-class Image(models.Model):
-	image = models.ImageField(upload_to='media/', blank=True, null=True, default = 'blank.png')
+
+
+
 
 class Comment(models.Model):
 	comment = models.TextField()

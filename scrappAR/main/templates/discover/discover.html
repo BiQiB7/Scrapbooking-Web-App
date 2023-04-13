@@ -1,90 +1,315 @@
-{% extends 'discover/main.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Discover page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
 {% block content %}
-
-<div class="header">
-    <h1>Discover Page</h1>
-
-    <div class="search">
-        <form method="GET" action = "{% url 'discover:discover' %}">
-            <img class="search-icon" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDU2Ljk2NiA1Ni45NjYiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDU2Ljk2NiA1Ni45NjY7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4Ij4KPHBhdGggZD0iTTU1LjE0Niw1MS44ODdMNDEuNTg4LDM3Ljc4NmMzLjQ4Ni00LjE0NCw1LjM5Ni05LjM1OCw1LjM5Ni0xNC43ODZjMC0xMi42ODItMTAuMzE4LTIzLTIzLTIzcy0yMywxMC4zMTgtMjMsMjMgIHMxMC4zMTgsMjMsMjMsMjNjNC43NjEsMCw5LjI5OC0xLjQzNiwxMy4xNzctNC4xNjJsMTMuNjYxLDE0LjIwOGMwLjU3MSwwLjU5MywxLjMzOSwwLjkyLDIuMTYyLDAuOTIgIGMwLjc3OSwwLDEuNTE4LTAuMjk3LDIuMDc5LTAuODM3QzU2LjI1NSw1NC45ODIsNTYuMjkzLDUzLjA4LDU1LjE0Niw1MS44ODd6IE0yMy45ODQsNmM5LjM3NCwwLDE3LDcuNjI2LDE3LDE3cy03LjYyNiwxNy0xNywxNyAgcy0xNy03LjYyNi0xNy0xN1MxNC42MSw2LDIzLjk4NCw2eiIgZmlsbD0iIzAwMDAwMCIvPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K" />
-            <input class="search__input" type="text" name="q" placeholder="Search">
-        </form>
+<div class="all">
+    <div class="header">
+        <ul id="navbar">
+        <li><a href="{% url 'discover:discover' %}" id="navbuttons"><i class="fa fa-globe" style="font-size:20px"></i> Discover</a></li>
+        <li><a href="{% url 'profile:profile' %}" id="navbuttons"><i class="fa fa-user-circle" style="font-size:20px"></i> Profile</a></li>
+        <li><a href="{% url 'analytics:analytics' %}" id="navbuttons"><i class="fa fa-line-chart" style="font-size:20px"></i> Analytics</a></li>
+        <li style="float:right"><a href="{% url 'users:login' %}" id="navbuttons"><i class="fa fa-sign-out" style="font-size:20px"></i> Logout</a></li>
+        </ul>
     </div>
-</div>
 
-<style>
-@import url('https://fonts.googleapis.com/css?family=Raleway:400,700,900');
+    <style>
+    @import url('https://fonts.googleapis.com/css?family=Raleway:400,700,900');
 
-/* Base styling */
+    /* Base styling */
+    /* 
+        .open-button {
+        background-color: #555;
+        color: white;
+        padding: 16px 20px;
+        border: none;
+        cursor: pointer;
+        opacity: 0.8;
+        position: fixed;
+        top: 23px;
+        right: 400px;
+        width: 300px;
+        } */
 
-    body {
-        width: 90vw;    /*90% view width*/
-        height: 100vh;  /*100% view height*/
-        margin: 0 auto;
-        background-color: #e6e6e6;
-        font-family: 'Raleway', sans-serif;
-    }
- 
-    .search {
-        position: relative;
-        display: flex;
-    }
+        /* The popup form - hidden by default */
+        .form-popup {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        right: 15px;
+        z-index: 9;
+        }
 
-    .search-icon {
-        position: absolute;
-        top: 6px;
-        left: 8px;
-        width: 14px;
-    }
-
-    .search__input {
-        border: 3px solid black;
-        border-radius: 20px;
-        height: 20px;
-        width: 600%;
-        padding: 2px 23px 2px 30px;
-        outline: 0;
+        /* Add styles to the form container */
+        .form-container {
+        border-radius: 15px;
+        max-width: 500px;
+        padding-right: 20px;
+        padding-left: 20px;
         background-color: white;
-    }
+        padding-top: 20px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        }
 
-    .discover {
-        display: grid;
-        grid-template-columns: 1fr 3fr;
-    } 
-    
-    .topics {
-        margin-right: 50px;
-    }
-</style>
+        /* Set a style for the submit/login button */
+        .form-container .btn {
+        background-color: #04AA6D;
+        color: white;
+        padding: 16px 20px;
+        border: none;
+        cursor: pointer;
+        width: 200px;
+        margin-bottom: 10px;
+        opacity: 0.8;
+        }
 
-<body>
-    <div class = "discover">
+        .form-container .cancel {
+        background-color: red;
+        width: 150px;
+        }
+
+        /* Add some hover effects to buttons */
+        .form-container .btn:hover,
+        .open-button:hover {
+        opacity: 1;
+        }
+
+        body {
+            margin: 0;
+            background-color: #fffee8;
+            /* #fdfff5;*/
+            color: #346c3c;
+            font-size: 18px;
+        }
+
+        .all {
+            display: flex;
+            flex-direction: column; 
+        }
+
+        .header {
+            display: block;
+            position: relative;
+            order: 1;
+        }
+
+        .body {
+            display: block;
+            order: 2;
+            margin: 50px 50px 50px 50px;
+            position: relative;
+            width: 90vw;
+            font-family: 'Raleway', sans-serif;
+        }
+
+        .row1-column2 {
+            display: inline-block;
+            align-items: center;
+            position: relative;
+            top: 8%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .button {
+            display: inline;
+            border: 3px solid #346c3c;
+            background-color: #fdfff5;
+            border-radius: 50px;
+            background: linear-gradient(145deg, #fffccb, #fffccb);
+            font-family: 'Raleway', sans-serif;
+            color: #346c3c;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        /* .create {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        } */
+
+        .search {
+            display: inline;
+            position: relative;
+            min-width: 75%;
+            
+        }
+
+        .search__input {
+            border: 3px solid #346c3c;
+            border-radius: 20px;
+            /* padding: 2px 23px 2px 20px;
+            outline: 0;
+            background-color: #fffccb;
+            background: linear-gradient(145deg, #5747002c, #fffccb); */
+            display: inline; box-sizing: border-box;
+            -webkit-border-radius:20px;
+            -moz-border-radius:20px;
+            box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.33);
+            -moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5);
+            padding-left: 2%;
+            min-height: 40px;
+            background-color: #ffffff;
+
+        }
+
+        .scrapbookCards {
+            margin: 25px;
+            display: block;
+            border-radius: 45px;
+            background: linear-gradient(145deg, #fffee8, #5747002c);
+            box-shadow:  25px 25px 58px #4e460062, -25px -25px 58px #ffffff00;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            height: 450px;
+            width: 300px;
+        }
+
+        .scrapbooks {
+            display: grid;
+            grid-template-columns: 33% 33% 33%;
+        }
+
+        .book-info{
+            margin-top: 20px;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-bottom: 30px;
+        }
+
+        .discover {
+            display: grid;
+            grid-template-columns: 30% 70%;
+        } 
         
-        <div class = "topics">
-            <h3>Browse Topics</h3>
-            <hr>
-            <div>
-                <a href="{% url 'discover:discover' %}">All</a></h5>
-                <hr>
-            </div>
-            {% for topic in topics %}
-            <div>
-                <a href="{% url 'discover:discover' %}?q={{topic.name}}">{{topic.name}}</a></h5>
-                <hr>
-            </div>
-            {% endfor %}
-        </div>
+        .topics {
+            margin-right: 50px;
+        }
 
-        <div class = "scrapbooks">
-            {% for scrapbook in scrapbooks %}
-            <div>
-                <h5><a href="{% url 'scrapbook:scrapbook' scrapbook.id %}">{{scrapbook.name}}</a></h5>
-                <small>{{scrapbook.topic.name}}</small>
-                <hr>
+        #navbar {
+            top: 0%;
+            display: inline;
+            position: absolute;
+            width: 100%;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            /* background-color: #033f42; */
+            background: #346c3c;
+            /* #578e69; */
+            /*  */
+        }
+
+        #navbuttons {
+            font-family: Tahoma, Helvetica, sans-serif;
+            float: left;
+            display: block;
+            color: #fdfff5;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 20px;
+        }
+
+        #navbuttons:hover {
+            background-color: rgb(54, 54, 54);
+        }
+
+        a {
+            text-decoration: none;
+            color:#346c3c;
+        }
+
+        h4 {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        img {
+            border-bottom-left-radius: 10%;
+            border-bottom-right-radius: 40px;
+            height: 360px;
+            width: 300px;
+        }
+    </style>
+
+    <script>
+        function openForm() {
+        document.getElementById("myForm").style.display = "block";
+        }
+
+        function closeForm() {
+        document.getElementById("myForm").style.display = "none";
+        }
+    </script>
+
+    <body>
+    <div class = "body">
+        <div class = "discover">
+            <h1 class = "title">Discover Page</h1>
+            <div class="row1-column2">
+                <div class="search">
+                    <form method="GET" action = "{% url 'discover:discover' %}">
+                        <i class="fa fa-search" style="font-size:25px"></i>
+                        <input class="search__input" type="text" name="q" placeholder="Search" style="min-width: 75%; min-height: 25px; font-size: 25px;">
+                    </form>
+                </div>
+                <div class="create">
+                    <button class="button" onclick="openForm()" style="font-size:18px"><i class="fa fa-plus-circle"  style="font-size:23px"></i> Create Scrapbook</button>
+                        <div class="form-popup" id="myForm">
+                            <body>
+                                <form action="{%url 'discover:create_scrapbook' %}" method="POST" name="create_scrapbook" enctype="multipart/form-data" style="display: inline-block" class="form-container">
+                                    {% csrf_token %}
+                                    {{ form | crispy }}
+                                    <input type="submit" value="Create" class="btn"><i class="fa fa-paper-plane" style="color:aliceblue;"></i>
+                                    <button type="button" class="btn cancel" onclick="closeForm()" style="margin-left: 40px;">Close</button>
+                                </form>
+                            </body>
+                        </div>
+                </div>
             </div>
-            {% endfor %}
+            <div class = "topics">
+                <h3>Browse Topics</h3>
+                <div>
+                    <a href="{% url 'discover:discover' %}">All</a></h5>
+                    <hr>
+                </div>
+                {% for topic in topics %}
+                <div>
+                    <a href="{% url 'discover:discover' %}?q={{topic.name}}">{{topic.name}}</a></h5>
+                    <hr>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class = "scrapbooks">
+                {% for scrapbook in scrapbooks %}
+                <div class = "scrapbookCards">
+                    <div class="book-info">
+                        <h3><a href="{% url 'scrapbook:scrapbook-detail' scrapbook.id %}">{{scrapbook.title}}</a></h3>
+                        <p style="font-size: 18px;">{{scrapbook.topic.name}}</p>
+                    </div>
+                    {% if scrapbook.cover %}
+                    <a href="{% url 'scrapbook:scrapbook-detail' scrapbook.id %}"><img src="{{ scrapbook.cover.url }}" alt="{{ scrapbook.title }} cover image"></a>
+                    {% else %}
+                    <p>No cover image uploaded.</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
-</body>
+    </body>
+</div>
 {% endblock content %}
+</html>

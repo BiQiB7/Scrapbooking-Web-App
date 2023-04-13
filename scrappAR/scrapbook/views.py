@@ -1,163 +1,111 @@
 from .models import Image
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect, render, get_object_or_404
+from django.http import Http404, HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.views import View
-from .models import Posts, Comment, Likes, Scrapbook
-from .forms import PostForm, CommentForm
-from django.views.generic.edit import UpdateView, DeleteView
+from .models import Posts, Comment, Likes, Scrapbook, Image
+from .forms import PostForm, CoverImageForm
+from django.views.generic import UpdateView, DeleteView
 from django.views.decorators.csrf import csrf_exempt
-from .models import select_scrapbook
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from .models import Scrapbook
+from django.core.files.storage import FileSystemStorage
+
 
 
 class PostListView(View):
-	def get(self, request, *args, **kwargs):
-		if request.method =="GET":
-			post = Posts.objects.all().order_by('-created_on')
-			context = {
-				'post_list': post,
-			} 
+    template_name = 'scrapbook/post_list.html'
 
-		return render(request, 'scrapbook/post_list.html', context)
+    def get(self, request, *args, **kwargs):
+        scrapbook = get_object_or_404(Scrapbook, pk=kwargs['pk'])
+        post = Posts.objects.filter(
+            scrapbook=scrapbook).order_by('-created_on')
+        form = PostForm()
 
-	def post(self, request, *args, **kwargs):
-		if request.method == "POST":
-			post = Posts.objects.all().order_by('-created_on')
-			form = PostForm(request.POST, request.FILES)
-			files = request.FILES.getlist('image')
+        context = {
+            'post_list': post,
+            'form': form,
+            'scrapbook': scrapbook,
+        }
 
-			if form.is_valid():
-				new_post = form.save(commit=False)
-				new_post.author = request.user
-				new_post.save()
+        return render(request, self.template_name, context)
 
-			for f in files:
-				img = Image(image=f)
-				img.save()
-				new_post.image.add(img)
-			new_post.save()
-				
+    def post(self, request, *args, **kwargs):
+        scrapbook = get_object_or_404(Scrapbook, pk=kwargs['pk'])
+        form = PostForm(request.POST, request.FILES)
 
-			context = {
-				'post_list': post,
-				'form': form,
-			}
+        if form.is_valid():
+            new_post = form.save(commit=False)
+            new_post.author = request.user
+            new_post.scrapbook = scrapbook
+            new_post.save()
 
-		return render(request, 'scrapbook/post_list.html', context)
-	def show_scrapbooks(request):
-		results = select_scrapbook.objects.all()
-		return render(request,"scrapbook/post_list.html",{"select_scrapbook": results})
+            for f in request.FILES.getlist('image'):
+                img = Image(image=f)
+                img.save()
+                new_post.image.add(img)
 
-	
-	def scrapbook(request, pk):
+            form = PostForm()
 
-		scrapbook = Scrapbook.objects.get(id=pk)    
+        post = Posts.objects.filter(
+            scrapbook=scrapbook).order_by('-created_on')
+        context = {
+            'post_list': post,
+            'form': form,
+            'scrapbook': scrapbook,
+        }
 
-		post = Posts.objects.all().order_by('-created_on')
-		form = PostForm(request.POST, request.FILES)
-		files = request.FILES.getlist('image')
-			
-		
-		if form.is_valid():
-			new_post = form.save(commit=False)
-			new_post.author = request.user
-			new_post.save()
+        return render(request, self.template_name, context)
 
-		for f in files:
-			img = Image(image=f)
-			img.save()
-			new_post.image.add(img)
-			new_post.save()
-		context = {
-			'post_list': post,
-			'form': form,
-			} 
-		# pk = self.kwargs['pk']
-		# return reverse_lazy('scrapbook', kwargs={'pk': pk})
-		return render(request, 'scrapbook/post_list.html', context)
+    def take_picture(request):
+        return render(request, 'scrapbook/merging.html')
+    
 
-class PostDetailView(View):
-	def gets(self, request, pk, *args, **kwargs):
-		post = Posts.objects.get(pk=pk)
-		form = CommentForm()
-		comments = Comment.objects.filter(post=post).order_by('-created_on')
+    
+class DeleteScrapbookView(DeleteView):
+    model = Scrapbook
+    success_url = reverse_lazy('discover:discover')
 
-		context = {
-			'post' : post,
-			'form' : form,
-			'comments' : comments,
-		}
+    def post(self, request, *args, **kwargs):
+        # scrapbook_pk = request.POST.get('pk')
+        scrapbook = Scrapbook.objects.get(pk=kwargs['pk'])
+        messages.success(request, 'Scrapbook "{}" deleted successfully!'.format(scrapbook.title))
+        return super().post(request, *args, **kwargs)
+    
+from django.urls import reverse_lazy
 
-		return render(request, 'scrapbook/post_details.html', context)
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    model = Posts
+    template_name = 'scrapbook/post_delete.html'
 
-	def post(self, request, pk, *args, **kwargs):
-		post = Posts.objects.get(pk=pk)
-		form = CommentForm(request.POST)
+    def get_success_url(self):
+        return reverse_lazy('scrapbook:scrapbook-detail', kwargs={'pk': self.object.scrapbook.pk})
 
-		if form.is_valid():
-			new_comment = form.save(commit=False)
-			new_comment.author = request.user
-			new_comment.post = post
-			new_comment.save()
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
 
-		comments = Comment.objects.filter(post=post).order_by('-created_on')
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.author != request.user:
+            raise Http404
+        success_url = self.get_success_url()
+        self.object.delete()
+        return redirect(success_url)
 
-		context = {
-			'post' : post,
-			'form' : form,
-			'comments': comments,
-		}
+    
 
-		return render(request, 'scrapbook/post_details.html', context)
-
-	def like(request, post_id):
-		user = request.user
-		post = Posts.objects.get(id=post_id)
-		current_likes = post.likes 
-		liked = Likes.objects.filter(user=user, post=post).count()
-		if not liked:
-			liked = Likes.objects.create(user=user, post=post)
-			current_likes = current_likes + 1
-		else: 
-			liked = Likes.objects.filter(user=user, post=post).delete()
-			current_likes = current_likes - 1
-
-		post.likes = current_likes
-		post.saw()
-		return HttpResponseRedirect(reverse('post-detail', args=[post_id]))
-
-class PostEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-	model = Posts
-	fields = ['body']
-	template_name = 'scrapbook/post_edit.html'
-
-	def get_success_url(self):
-		pk = self.kwargs['pk']
-		return reverse_lazy('post-detail', kwargs={'pk': pk})
-
-	def test_func(self):
-		post = self.get_object()
-		return self.request.user == post.author
-
-class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-	model = Posts
-	template_name = 'scrapbook/post_delete.html'
-	success_url = reverse_lazy('post-list')
-
-	def test_func(self):
-		post = self.get_object()
-		return self.request.user == post.author
 
 class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-	model = Comment
-	template_name = 'scrapbook/comment_delete.html'
+    model = Comment
+    template_name = 'scrapbook/comment_delete.html'
 
-	def get_success_url(self):
-		pk = self.kwargs['post_pk']
-		return reverse_lazy('post-detail', kwargs={'pk': pk})
+    def get_success_url(self):
+        pk = self.kwargs['post_pk']
+        return reverse_lazy('post-detail', kwargs={'pk': pk})
 
-	def test_func(self):
-		post = self.get_object()
-		return self.request.user == post.author
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author

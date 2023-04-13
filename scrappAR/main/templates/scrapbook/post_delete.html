@@ -1,11 +1,13 @@
-{extends 'landing/base.html' %}
+
 {% load crispy_forms_tags %}
 
 {% block content %}
 <form class="container">
+    Post deleted successfully!
+<input type=button value="Previous Page" onClick="javascript:history.go(-1);">
 	<div class="row justify-content-center mt-3">
 		<div class="col-md-5 col-sm-12 border-bottom">
-			<a href="{% url 'post-detail' object.pk %}" class="btn btn-light">Back To Post</a>
+			<a href="{% url 'scrapbook:post-list' %}" class="btn btn-light">Back To Post</a>
 		</div>
 	</div>
 

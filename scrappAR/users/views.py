@@ -22,9 +22,10 @@ def loginPage(request):
                 return redirect('discover:discover')
             else:
                 messages.success(request, 'You have successfully login.')
-                return render(request, 'users/index.html')
+                return redirect('discover:discover')
+            # render(request, 'users/index.html')
     else:
-        return render(request, 'users/index.html')
+        return render(request, 'users/login.html')
 
 def signout(request):
     
@@ -46,7 +47,7 @@ def signupPage(request):
                     newuser = User.objects.create_user(username = request.POST.get('txtUserName'), first_name = request.POST.get('txtFirstName'),last_name = request.POST.get('txtLastName'), email = request.POST.get('txtEmail'), password = request.POST.get('txtPassword'))
                     
                     auth.login(request, newuser)
-                    return redirect('discover')
+                    return redirect('discover:discover')
         else:
             messages.error(request, 'Password does not match!')
             return render(request, 'users/signup.html', context)

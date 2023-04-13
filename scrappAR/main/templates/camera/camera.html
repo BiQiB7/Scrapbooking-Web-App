@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Camera Page</title>
+</head>
+<form method="POST" action="{% url 'camera:run-script' %}">
+    {% csrf_token %}
+    <input type="hidden" name="script" value="dog_filter.py">
+  <button type="submit">Run Script</button>
+</form>
+<body>
+    
+    <br><br>
+    <div class = "container">     
+        <video id="video" width="640" height="480" autoplay></video>
+        <canvas id="canvas" width="640" height="480"></canvas>
+        <canvas id="sticker-canvas" width="640" height="480"></canvas>
+        <canvas id="img" width="640" height="480"></canvas>
+        <br><br>
+    </div>
+        <button onclick="openCamera()">Open Camera</button>
+        <button onclick="takePicture()">Take Picture</button>
+        <button onclick="startRecording()">Start Recording</button>
+        <button onclick="stopRecording()">Stop Recording</button>
+        <button onclick="addSticker()">Add Sticker</button>
+        <button onclick="screenshot()">Download</button>
+    
+    <style>
+    .container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+    } 
+
+    #canvas,
+    #video{
+        position: absolute;
+        margin-top: 10px;
+    }
+
+    button {
+        background-color: rgb(183, 239, 229);
+        margin: 0 auto;
+        display: inline-block;
+        width: 200px;
+        font-size: 13px;
+        padding: 10px;
+        border-radius: 5px;
+        color: rgb(49, 23, 7);
+        cursor: pointer;
+        font-family: Tahoma, sans-serif;
+        font-weight: 200;      
+    }
+    </style>
+    <script>
+        var mediaRecorder;
+        var chunks = [];
+        var isStickerMode = false;
+        var stickers = [];
+        var picture;
+        var video = document.getElementById("video");
+        var canvas = document.getElementById("canvas");
+        //var stickerCanvas = document.getElementById("sticker-canvas");
+        var context = canvas.getContext('2d');
+        var stickerContext = stickerCanvas.getContext('2d');
+        var imageElement;
+
+        function openCamera() {
+            navigator.mediaDevices.getUserMedia({video: true})
+            .then(function(stream) {
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+        }
+        // fix later
+        function startRecording() {
+            mediaRecorder = new MediaRecorder(video.srcObject);
+
+            mediaRecorder.ondataavailable = function(event) {
+                chunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = function() {
+                var blob = new Blob(chunks, {type: "video/mp4"});
+                var videoURL = URL.createObjectURL(blob);
+                var oldVideo = document.getElementById("recordedVideo");
+                if (oldVideo) {
+                    oldVideo.parentNode.removeChild(oldVideo);
+                }
+                var newVideo = document.createElement("video");
+                newVideo.src = videoURL;
+                newVideo.id = "recordedVideo";
+                var videoDiv = document.getElementById("camera");
+                videoDiv.appendChild(newVideo);
+                newVideo.play();       
+            };
+
+            mediaRecorder.start();
+        }
+
+        function stopRecording() {
+            mediaRecorder.stop();
+        }
+
+        function takePicture() {
+            // why video not camera?
+            // once take picture, canvas is created
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            for (var i = 0; i < stickers.length; i++) {
+                var sticker = stickers[i];
+                stickerContext.drawImage(sticker.img, sticker.x, sticker.y, sticker.width, sticker.height);
+    
+            }
+
+            // Create an image element to display the captured image
+            imageElement = document.createElement("img");
+
+            // Set the source of the image to the data URL of the canvas
+            imageElement.src = canvas.toDataURL('image/png');
+
+            // Hide the video and show the captured image
+            //video.style.display = "none";
+            //canvas.style.display = "none";
+            //stickerCanvas.style.display = "none";
+            //imageElement.style.display = "block";
+
+
+            // Create a button to post the image
+            // move out later
+            var postButton = document.createElement("button");
+            postButton.innerHTML = "Post Picture";
+
+            // Add an onclick event to the button that posts the image
+            postButton.onclick = function() {
+                // Create a new image element with the same source as the captured image
+                var postedImageElement = document.createElement("img");
+                postedImageElement.src = imageElement.src;
+
+                // Add the new image element to the camera div
+                var cameraDiv = document.getElementById("camera");
+                cameraDiv.appendChild(postedImageElement);
+
+                // Hide the captured image and the post button
+                imageElement.style.display = "none";
+                postButton.style.display = "none";
+
+                // Show the video again
+                video.style.display = "block";
+            };
+
+            // Add the image element and the post button to the camera div
+            var cameraDiv = document.getElementById("camera");
+            cameraDiv.appendChild(imageElement);
+            cameraDiv.appendChild(postButton);
+            
+        }
+
+        function addSticker() {
+            // Load the sticker image
+            var sticker = new Image();
+            sticker.setAttribute('crossOrigin', 'anonymous');
+            sticker.width = 100;
+            sticker.height = 100;
+            sticker.src = "https://cdn-icons-png.flaticon.com/512/9985/9985963.png";
+
+            // Draw the sticker on the canvas
+            sticker.onload = function () {
+                // Create a sticker canvas
+                //var stickerCanvas = document.createElement("canvas");
+                //stickerCanvas.width = sticker.width;
+                //stickerCanvas.height = sticker.height;
+                //var stickerContext = stickerCanvas.getContext("2d");
+                //stickerContext.drawImage(sticker, 0, 0);
+
+                // Add the sticker to the stickers array
+                //stickers.push({ img: stickerCanvas, x: 0, y: 0, width: sticker.width, height: sticker.height });
+
+                // Make the sticker draggable
+                var dragItem = document.createElement("div");
+                dragItem.classList.add("drag-item");
+                dragItem.appendChild(sticker);
+                dragItem.style.position = "absolute"; // add this line
+                canvas.parentNode.insertBefore(dragItem, canvas.nextSibling);
+                dragItem.addEventListener("mousedown", function (e) {
+                var startX = e.clientX;
+                var startY = e.clientY;
+                var stickerX = dragItem.offsetLeft;
+                var stickerY = dragItem.offsetTop;
+                // sticker.x = newStickerX;
+                // sticker.y = newStickerY;
+
+                function move(e) {
+                    var newStickerX = stickerX - (startX - e.clientX);
+                    var newStickerY = stickerY - (startY - e.clientY);
+                    dragItem.style.left = newStickerX + "px";
+                    dragItem.style.top = newStickerY + "px";
+                    sticker.x = newStickerX - dragItem.offsetLeft;
+                    sticker.y = newStickerY - dragItem.offsetTop;
+                    //context.clearRect(0, 0, canvas.width, canvas.height);
+                    //for (var i = 0; i < stickers.length; i++) {
+                    //    var sticker = stickers[i];
+                    context.drawImage(sticker, sticker.x, sticker.y, sticker.width, sticker.height);
+                    //}
+                }
+
+                function stop() {
+                    document.removeEventListener("mousemove", move);
+                    document.removeEventListener("mouseup", stop);
+                }
+
+                document.addEventListener("mousemove", move);
+                document.addEventListener("mouseup", stop);
+            });
+            var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            context.putImageData(imageData, 0, 0);    
+            };
+        }
+        function screenshot(){
+            html2canvas(document.getElementById('canvas')).then(function(canvas) {
+            document.body.appendChild(canvas);
+         });
+        }
+
+        function downloadImage() {
+            var canvas = document.getElementById("canvas");
+            // Create a new canvas with the same size as the preview image canvas and the sticker canvas
+            var mergedCanvas = document.createElement("canvas");
+            mergedCanvas.width = canvas.width;
+            mergedCanvas.height = canvas.height;
+            var mergedContext = mergedCanvas.getContext("2d");
+
+            // Draw the preview image canvas onto the new canvas
+            mergedContext.drawImage(canvas, 0, 0);
+
+            // Draw the sticker canvas onto the new canvas at the correct position
+            for (var i = 0; i < stickers.length; i++) {
+                var sticker = stickers[i];
+                mergedContext.drawImage(sticker.img, sticker.x, sticker.y, sticker.width, sticker.height);
+            }
+
+            // Convert the new canvas to a data URL
+            var dataURL = mergedCanvas.toDataURL("image/png");
+
+            // Create a new anchor element with the download attribute set to the desired filename and the href attribute set to the data URL
+            var downloadLink = document.createElement("a");
+            downloadLink.download = "preview.png";
+            downloadLink.href = dataURL;
+
+            // Programmatically click the anchor element to trigger the download
+            downloadLink.click();
+        }
+
+    </script>
+</body>
+</html>
