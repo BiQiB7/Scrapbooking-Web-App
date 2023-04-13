@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 
+<<<<<<< HEAD
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -40,6 +41,37 @@
             /* background-color: #033f42; */
             background: #346c3c;
         }
+=======
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    
+  </head>
+  <body  style="background-color: lightgrey;">
+    <div id='header'>
+      <ul id="navbar">
+        <li><a href="{% url 'discover:discover' %}" id="navbuttons">Discover</a></li>
+        <li><a href="{% url 'profile:profile' %}" id="navbuttons">Profile</a></li>
+        <li><a href="{% url 'analytics:analytics' %}" id="navbuttons">Analytics</a></li>
+      </ul>
+    </div>
+    {% block content %}
+    {% endblock content %}
+  
+  <style> 
+
+    #navbar {
+      top: 0%;
+      display: inline;
+      position: absolute;
+      width: 100%;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #000;
+      background: #000;
+  }
+>>>>>>> 4f52aba3eba81411cb7fd24db08a7c0af82c98b0
 
         #navbuttons {
             font-family: Tahoma, Helvetica, sans-serif;
